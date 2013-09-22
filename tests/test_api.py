@@ -2,6 +2,7 @@ import os
 import time
 import unittest
 
+from adnpy.cursor import cursor
 from config import AdnpyTestCase
 
 test_post_id = 1
@@ -104,6 +105,97 @@ class AdnpyAPITests(AdnpyTestCase):
         users, meta = self.api.users_reposted_post(1)
         users, meta = self.api.users_starred_post(1)
 
+    def test_channel(self):
+
+        channels, meta = self.api.subscribed_channels()
+
+        channel, meta = self.api.create_channel(data={
+            'type': 'com.example.channel',
+            'writers': {
+                'user_ids': ['@voidfiles'],
+                'immutable': False,
+            }
+        })
+
+        channel_fetched, meta = self.api.get_channel(channel)
+        self.assertEquals(channel.id, channel_fetched.id)
+
+
+        channels, meta = self.api.get_channels(ids=channel_fetched.id)
+
+        channels, meta = self.api.users_channels()
+
+        num_unread, meta = self.api.num_unread_pm_channels()
+
+        channel_update = {
+            'id': channel.id,
+            'writers': {
+                'user_ids': [],
+            }
+        }
+
+        channel, meta = self.api.update_channel(channel, data=channel_update)
+        self.assertEquals(channel_update['writers']['user_ids'], channel.writers.user_ids)
+
+        channel, meta = self.api.subscribe_channel(1383)
+        channel, meta = self.api.unsubscribe_channel(1383)
+
+        users, meta = self.api.subscribed_users(1383)
+        users, meta = self.api.subscribed_user_ids(1383)
+
+        channel_user_ids, meta = self.api.subscribed_user_ids_for_channels(ids='1383,6313')
+
+        channel, meta = self.api.mute_channel(1383)
+        channels, meta = self.api.muted_channels(1383)
+        channel, meta = self.api.unmute_channel(1383)
+
+    def test_message(self):
+
+        message1, meta = self.api.create_message(27024, data={'text': "awesome 1"})
+        message2, meta = self.api.create_message(27024, data={'text': "awesome 2"})
+        message, meta = self.api.get_message(27024, message1)
+        messages, meta = self.api.get_messages(ids='%s, %s' % (message1.id, message2.id))
+        self.assertEquals(len(messages), 2)
+        messages, meta = self.api.users_messages()
+        self.assertEquals(len(messages), 2)
+
+        message, meta = self.api.delete_message(27024, message1)
+        message, meta = self.api.delete_message(27024, message2)
+
+    def test_interactions(self):
+
+        interactions, meta = self.api.interactions_with_user()
+
+
+    def test_text_process(self):
+        text, meta = self.api.text_process(data={'text': "#awesome @voidfiles"})
+
+
+    def test_places(self):
+        places, meta = self.api.search_places(q='krispy kreme', latitude='37.701598', longitude='-122.470093', radius='50000')
+
+        place, meta = self.api.get_place(places[0])
+
+
+    def test_token(self):
+        token, meta = self.api.get_token()
+        self.assertIsNotNone(token.get('user'))
+
+    def test_config(self):
+        config, meta = self.api.get_config()
+
+    def test_explore_stream(self):
+        explore_streams, meta = self.api.get_explore_streams()
+        posts, meta = self.api.get_explore_stream(explore_streams[0])
+
+    def test_cursor(self):
+        iterator = cursor(self.api.posts_stream_global, count=1)
+        post1 = iterator.next()
+        post2 = iterator.next()
+        self.assertNotEquals(post1.id, post2.id)
+
+        iterator = cursor(self.api.get_explore_stream, 'photos')
+        post1 = iterator.next()
 
 if __name__ == '__main__':
     unittest.main()

@@ -19,9 +19,15 @@ def is_seq_not_string(obj):
 
 
 class SimpleValueModel(object):
-  @classmethod
-  def from_response_data(cls, data, api):
-    return data
+    @classmethod
+    def from_response_data(cls, data, api):
+        return data
+
+
+class SimpleValueDictListMode(object):
+    @classmethod
+    def from_response_data(cls, data, api):
+        return {key:[int(x) for x in val] for key, val in data}
 
 
 class Model(dict):
@@ -66,6 +72,9 @@ class Model(dict):
               data[k] = v
 
         return data
+
+    def __unicode__(self):
+        self.serialize().__unicode__()
 
     def __getstate__(self):
         return self.serialize()
@@ -161,3 +170,37 @@ class App(APIModel):
             app.recommended_by = [User.from_response_data(x, api) for x in app.recommended_by]
 
         return app
+
+
+class Token(APIModel):
+    @classmethod
+    def from_response_data(cls, data, api=None):
+        token = super(Token, cls).from_response_data(data, api)
+        if token.get('user'):
+            token.user = User.from_response_data(token.user)
+
+        return token
+
+
+class Place(APIModel):
+    @classmethod
+    def from_response_data(cls, data, api=None):
+        place = super(Place, cls).from_response_data(data, api)
+
+        return place
+
+    @property
+    def id(self):
+        return self.factual_id
+
+
+class ExploreStream(APIModel):
+    @classmethod
+    def from_response_data(cls, data, api=None):
+        explore_stream = super(ExploreStream, cls).from_response_data(data, api)
+
+        return explore_stream
+
+    @property
+    def id(self):
+        return self.slug
