@@ -20,10 +20,10 @@ You are going to need an access_token, if you don't have a developer account on 
 
 ```python
 import adnpy
+
 adnpy.api.add_authorization_token(<Access Token Here>)
 
 # Create a post
-
 post, meta = adnpy.api.create_post(text='Hello, App.net from adnpy.')
 
 # Take a look at recent checkins

@@ -1,6 +1,7 @@
 *.pyc
 *.swp
 build/
+docs/_build/
 dist/
 adnpy.egg-info/
 .env/
