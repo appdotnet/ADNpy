@@ -20,13 +20,16 @@ Obligatory, Hello World
 
    import adnpy
 
+   adnpy.api.add_authorization_token('<Your Access Token Here>')
+   # Create a post
+   post, meta = adnpy.api.create_post(data={'text': 'Hello World'})
 
-   adnpy.api.add_authorization_token('<Your Access Token Here>')   
+   # Get the authenticated users posts
    posts, meta = adnpy.api.users_post_stream()
    for post in posts:
        print post.text
 
-In this example, you are fetching the last 20 posts created by the
+In this example, you are creating a post, and then you are fetching the last 20 posts created by the
 authenticated user, and then iterating over them to print them out.
 
 
