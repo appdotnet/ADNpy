@@ -10,7 +10,7 @@ Introduction
 
 ADNPy aims to be a seemless integration with the App.net API. To get started
 you should make sure you have an access token. If you don't have an
-App.net developer account, you can use <a href='http://dev-lite.jonathonduerig.com/'>dev-lite</a> to generate a token
+App.net developer account, you can use `dev-lite <http://dev-lite.jonathonduerig.com/>`_ to generate a token
 just for your user account.
 
 Obligatory, Hello World
@@ -29,7 +29,6 @@ Obligatory, Hello World
 In this example, you are fetching the last 20 posts created by the
 authenticated user, and then iterating over them to print them out.
 
-The :ref:`auth_tutorial` goes into more details about authentication.
 
 API
 ===
@@ -45,6 +44,7 @@ API calls normally return APIModels. There is an APIModel for common
 entities like Posts, Users, and Channels. APIModels are basically just
 special dict objects. You can access information using dot notation or use
 normal dict methods::
+
    # given a post object
    print post.text
    print post.get('text')
@@ -55,4 +55,4 @@ model instance::
 
    post.delete()
 
-For more information about models please see ModelsReference.
+For more information about models please see :ref:`model_reference`..

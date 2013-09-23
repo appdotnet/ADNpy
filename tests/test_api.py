@@ -15,13 +15,13 @@ class AdnpyAPITests(AdnpyTestCase):
 
     def test_post(self):
         text = u'awesome'
-        post, meta = self.api.write_post(data={'text': text})
+        post, meta = self.api.create_post(data={'text': text})
         self.assertEquals(post.text, text)
 
         post, meta = self.api.get_post(post)
 
         post, meta = self.api.delete_post(post)
-        post, meta = self.api.write_post(data={'text': text})
+        post, meta = self.api.create_post(data={'text': text})
         post, meta = post.delete()
 
         post, meta = self.api.repost_post(1)
@@ -100,7 +100,7 @@ class AdnpyAPITests(AdnpyTestCase):
         users, meta = self.api.users_blocked_users('me')
 
         # Add in testing for app access tokens
-        #users, meta = self.api.users_blocked_users_ids('me')
+        #users, meta = self.api.users_blocked_user_ids('me')
 
         users, meta = self.api.users_reposted_post(1)
         users, meta = self.api.users_starred_post(1)
@@ -157,6 +157,8 @@ class AdnpyAPITests(AdnpyTestCase):
         messages, meta = self.api.get_messages(ids='%s, %s' % (message1.id, message2.id))
         self.assertEquals(len(messages), 2)
         messages, meta = self.api.users_messages()
+        self.assertEquals(len(messages), 2)
+        messages, meta = self.api.get_channel_messages(27024)
         self.assertEquals(len(messages), 2)
 
         message, meta = self.api.delete_message(27024, message1)

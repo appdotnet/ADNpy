@@ -1,3 +1,11 @@
+"""
+.. module:: models
+   :synopsis: Simple abstractions of App.net entities.
+
+.. moduleauthor:: Alex Kessinger <alex@app.net>
+
+
+"""
 import collections
 from dateutil.parser import parse
 import json
@@ -30,7 +38,21 @@ class SimpleValueDictListMode(object):
         return {key:[int(x) for x in val] for key, val in data}
 
 
-class Model(dict):
+class APIModel(dict):
+    """
+    The base class for all API Models.
+
+    It has no special deserialization functionality. It is suitable for generic object.
+
+    Instead of initializing this directly you should use the :func:`Model.from_string` class method::
+
+        model = Model.from_string(raw_json, api)
+
+    Or, if you already have a dict you can initialize it like so::
+
+        model = Model.from_response_data(data, api)
+
+    """
     def __setattr__(self, name, val):
         return self.__setitem__(name, val)
 
@@ -41,32 +63,53 @@ class Model(dict):
             raise AttributeError(name)
 
     def __init__(self, data=None, api=None):
-        super(Model, self).__init__()
+        super(APIModel, self).__init__()
         self['_api'] = api
         if not data:
             return
 
         for k, v in data.iteritems():
             if isinstance(v, collections.Mapping):
-                self[k] = Model(v, api)
+                self[k] = APIModel(v, api)
             elif v and is_seq_not_string(v) and isinstance(v[0], collections.Mapping):
-                self[k] = [Model(i, api) for i in v]
+                self[k] = [APIModel(i, api) for i in v]
             else:
                 self[k] = v
 
     @classmethod
     def from_string(cls, raw_json, api=None):
+        """
+       :param raw_json: a json response from the API
+       :param api: an instance of :class:`adnpy.api.API`
+       :rtype: model obj
+        """
         return cls(json.loads(raw_json), api)
 
+
+    @classmethod
+    def from_response_data(cls, data, api=None):
+        """
+       :param data: a dict
+       :param api: an instance of :class:`adnpy.api.API`
+       :rtype: model obj
+        """
+        model = cls(data, api)
+        return model
+
+
     def serialize(self):
+        """
+        Converts :class:`adnpy.models.Model` into a normal dict without references to the api
+        """
+
         data = {}
         for k, v in self.iteritems():
             if k.startswith('_'):
               continue
 
-            if isinstance(v, Model):
+            if isinstance(v, APIModel):
               data[k] = v.serialize()
-            elif v and is_seq_not_string(v) and isinstance(v[0], Model):
+            elif v and is_seq_not_string(v) and isinstance(v[0], APIModel):
               data[k] = [x.serialize() for x in v]
             else:
               data[k] = v
@@ -80,14 +123,10 @@ class Model(dict):
         return self.serialize()
 
 
-class APIModel(Model):
-    @classmethod
-    def from_response_data(cls, data, api=None):
-        model = cls(data, api)
-        return model
-
-
 class User(APIModel):
+    """
+    The User Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         user = super(User, cls).from_response_data(data, api)
@@ -96,8 +135,58 @@ class User(APIModel):
 
         return user
 
+    def update_user(self):
+        """
+        Save the state of the current user
+        """
+        # First create a copy of the current user
+        user_dict = self.serialize()
+        # Then delete the entities in the description field
+        del user_dict['description']['entities']
+        # Then upload user_dict
+        user, meta = self._api.update_user('me', data=user_dict)
+
+    def follow_user(self):
+        """
+        Follow this user
+        """
+        return self._api.follow_user(self)
+
+    def unfollow_user(self):
+        """
+        Unfollow this user
+        """
+        return self._api.unfollow_user(self)
+
+    def mute_user(self):
+        """
+        Mute this user
+        """
+        return self._api.mute_user(self)
+
+    def unmute_user(self):
+        """
+        Unmute this user
+        """
+        return self._api.unmute_user(self)
+
+    def block_user(self):
+        """
+        Block this user
+        """
+        return self._api.block_user(self)
+
+    def unblock_user(self):
+        """
+        Unblock this user
+        """
+        return self._api.unblock_user(self)
+
 
 class Post(APIModel):
+    """
+    The Post Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         post = super(Post, cls).from_response_data(data, api)
@@ -120,10 +209,42 @@ class Post(APIModel):
         return post
 
     def delete(self):
+        """
+        Delete this post
+        """
         return self._api.delete_post(self)
+
+    def repost(self):
+        """
+        Repost this post
+        """
+        return self._api.repost_post(self)
+
+
+    def unrepost(self):
+        """
+        Remove repost of this post
+        """
+        return self._api.unrepost_post(self)
+
+    def star(self):
+        """
+        Star this post
+        """
+        return self._api.star_post(self)
+
+
+    def unstar(self):
+        """
+        Remove star of this post
+        """
+        return self._api.unstar_post(self)
 
 
 class Message(APIModel):
+    """
+    The Message Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         message = super(Message, cls).from_response_data(data, api)
@@ -139,6 +260,9 @@ class Message(APIModel):
 
 
 class Interaction(APIModel):
+    """
+    The Interaction Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         interaction = super(Interaction, cls).from_response_data(data, api)
@@ -153,6 +277,9 @@ class Interaction(APIModel):
 
 
 class Channel(APIModel):
+    """
+    The Channel Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         channel = super(Channel, cls).from_response_data(data, api)
@@ -161,6 +288,9 @@ class Channel(APIModel):
 
 
 class App(APIModel):
+    """
+    The App Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         app = super(App, cls).from_response_data(data, api)
@@ -173,6 +303,9 @@ class App(APIModel):
 
 
 class Token(APIModel):
+    """
+    The Token Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         token = super(Token, cls).from_response_data(data, api)
@@ -183,6 +316,9 @@ class Token(APIModel):
 
 
 class Place(APIModel):
+    """
+    The Place Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         place = super(Place, cls).from_response_data(data, api)
@@ -195,6 +331,9 @@ class Place(APIModel):
 
 
 class ExploreStream(APIModel):
+    """
+    The Explore Stream Model
+    """
     @classmethod
     def from_response_data(cls, data, api=None):
         explore_stream = super(ExploreStream, cls).from_response_data(data, api)

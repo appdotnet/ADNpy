@@ -10,7 +10,24 @@ from adnpy.models import (SimpleValueModel, APIModel, Post, User, Channel, Messa
 from adnpy.utils import json_encoder
 
 class API(requests.Session):
+    """
+    The root API method
 
+    Example::
+
+        # To get an unauthenticated api object
+        import adnpy
+
+        # adnpy.api is an unauthenticated instance of the API object
+        adnpy.api.get_post(1)
+
+        # To authenticate the API object, add an authorization token
+        adnpy.api.add_authorization_token(access_token='<access_token>')
+
+        # Otherwise, you can construct an an authenticated api object
+        my_api = adnpy.API.build_api(access_token='<access_token>')
+
+    """
     @classmethod
     def build_api(cls, api_root='https://alpha-api.app.net/stream/0', access_token=None):
         api = cls()
@@ -65,7 +82,7 @@ class API(requests.Session):
 re_path_template = re.compile('{\w+}')
 
 
-def bind_api_method(func_name, path, payload_type=None, payload_list=False, allowed_params=None, method='GET', require_auth=True, content_type='JSON'):
+def bind_api_method(func_name, path, payload_type=None, payload_list=False, allowed_params=None, method='GET', require_auth=True, content_type='JSON', extra_doc='', link='#'):
     allowed_params = allowed_params or []
 
     def run(self, *args, **kwargs):
@@ -97,11 +114,23 @@ def bind_api_method(func_name, path, payload_type=None, payload_list=False, allo
 
         return resp.data, resp.meta
 
+    return_type = ':class:`%s.%s`' % (payload_type.__module__, payload_type.__name__)
+    if payload_list:
+        return_type = 'list of %s' % (return_type)
+
+    doc = """%s
+    **API Endpoint**: `%s %s`
+
+    **Returns**: %s
+    """ % (extra_doc, method, path, return_type)
+
+    run.__doc__ = doc
+
     setattr(API, func_name, run)
 
 # Post methods
 
-bind_api_method('write_post', '/posts', payload_type=Post, method='POST',
+bind_api_method('create_post', '/posts', payload_type=Post, method='POST',
                 allowed_params=POST_PARAMS,
                 require_auth=True)
 
@@ -294,7 +323,7 @@ bind_api_method('users_blocked_users', '/users/{user_id}/blocked', payload_type=
                  require_auth=True)
 
 
-bind_api_method('users_blocked_users_ids', '/users/blocked/ids', payload_type=SimpleValueModel, payload_list=True,
+bind_api_method('users_blocked_user_ids', '/users/blocked/ids', payload_type=SimpleValueModel, payload_list=True,
                  allowed_params=USER_PARAMS + ['ids'],
                  require_auth=True)
 
@@ -381,7 +410,7 @@ bind_api_method('muted_channels', '/users/me/channels/muted', payload_type=Chann
 
 
 # Messages
-bind_api_method('get_messages', '/channels/{channel_id}/messages', payload_type=Message, payload_list=True,
+bind_api_method('get_channel_messages', '/channels/{channel_id}/messages', payload_type=Message, payload_list=True,
                  allowed_params=PAGINATION_PARAMS + MESSAGE_PARAMS,
                  require_auth=True)
 

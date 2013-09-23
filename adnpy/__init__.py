@@ -1,5 +1,7 @@
-"""
-App.net API library
+"""App.net API library
+
+.. moduleauthor:: Alex Kessinger <alex@app.net>
+
 """
 __version__ = '0.1'
 __author__ = 'Alex Kessinger'
