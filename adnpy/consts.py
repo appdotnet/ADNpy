@@ -71,7 +71,6 @@ CHANNEL_PARAMS = [
     'include_read',
     'include_recent_message',
     'include_annotations',
-    'include_channel_annotations',
     'include_user_annotations',
     'include_message_annotations',
 ]

@@ -93,7 +93,14 @@ def bind_api_method(func_name, path, payload_type=None, payload_list=False, allo
         parameters = {}
         for key, val in kwargs.items():
             if key in allowed_params:
-                parameters[key] = kwargs.pop(key)
+                value = kwargs.pop(key)
+                if value is True:
+                    value = 1
+
+                if value is False:
+                    value = 0
+
+                parameters[key] = value
 
         proccessed_path = path
         path_args = re_path_template.findall(path)
