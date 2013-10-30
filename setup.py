@@ -13,7 +13,7 @@ setup(name="adnpy",
       packages=find_packages(exclude=['tests']),
       install_requires=[
         'python-dateutil==2.1',
-        'requests==1.2.3',
+        'requests==2.0.1',
       ],
       keywords="app.net api library",
       zip_safe=True)
