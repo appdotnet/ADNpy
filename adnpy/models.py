@@ -76,6 +76,13 @@ class APIModel(dict):
             else:
                 self[k] = v
 
+
+        annotations = self.get('annotations')
+        if annotations:
+            self.annotations_by_key = collections.defaultdict(list)
+            for annotation in annotations:
+                self.annotations_by_key[annotation.type].append(annotation.get('value', {}))
+
     @classmethod
     def from_string(cls, raw_json, api=None):
         """
@@ -115,6 +122,19 @@ class APIModel(dict):
               data[k] = v
 
         return data
+
+    def get_annotation(self, key, result_format='list'):
+        """
+        Is a convenience method for accessing annotations on models that have them
+        """
+        value = self.get('annotations_by_key', {}).get(key)
+        if not value:
+            return value
+
+        if result_format == 'one':
+            return value[0]
+
+        return value
 
     def __unicode__(self):
         self.serialize().__unicode__()
