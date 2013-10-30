@@ -29,11 +29,13 @@ class API(requests.Session):
 
     """
     @classmethod
-    def build_api(cls, api_root='https://alpha-api.app.net/stream/0', access_token=None, verify=False):
+    def build_api(cls, api_root='https://alpha-api.app.net/stream/0', access_token=None, verify_ssl=False):
         api = cls()
         api.api_root = api_root
         if access_token:
             api.add_authorization_token(access_token)
+
+        api.verify_ssl = verify_ssl
 
         return api
 
@@ -41,7 +43,7 @@ class API(requests.Session):
         if url:
             url =  self.api_root + url
 
-        kwargs['verify'] = self.verify
+        kwargs['verify'] = self.verify_ssl
 
         response = super(API, self).request(method, url, *args, **kwargs)
 
