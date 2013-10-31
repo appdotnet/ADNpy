@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 #from distutils.core import setup
 from setuptools import setup, find_packages
-from adnpy import __version__
 
 setup(name="adnpy",
-      version=__version__,
+      version='0.0.1',
       description="App.net API library for python",
       license="MIT",
       author="Alex Kessinger",
