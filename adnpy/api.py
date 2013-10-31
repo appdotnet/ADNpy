@@ -29,14 +29,14 @@ class API(requests.Session):
 
     """
     @classmethod
-    def build_api(cls, api_root='https://alpha-api.app.net/stream/0', access_token=None, verify_ssl=False, headers=None):
+    def build_api(cls, api_root='https://alpha-api.app.net/stream/0', access_token=None, verify_ssl=False, extra_headers=None):
         api = cls()
         api.api_root = api_root
         if access_token:
             api.add_authorization_token(access_token)
 
         api.verify_ssl = verify_ssl
-        api.headers = headers if headers else {}
+        api.headers.update(extra_headers if extra_headers else {})
 
         return api
 
