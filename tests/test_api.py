@@ -24,11 +24,11 @@ class AdnpyAPITests(AdnpyTestCase):
         post, meta = self.api.create_post(data={'text': text})
         post, meta = post.delete()
 
-        post, meta = self.api.repost_post(1)
-        post, meta = self.api.unrepost_post(1)
+        post, meta = self.api.repost_post(14265380)
+        post, meta = self.api.unrepost_post(14265380)
 
-        post, meta = self.api.star_post(1)
-        post, meta = self.api.unstar_post(1)
+        post, meta = self.api.star_post(14265380)
+        post, meta = self.api.unstar_post(14265380)
 
         posts, meta = self.api.get_posts(ids='1,2,3')
         self.assertEquals(len(posts), 3)
@@ -71,11 +71,11 @@ class AdnpyAPITests(AdnpyTestCase):
 
         # XXX: Need to figure out how I can record, and replay these calls, but they work
 
-        #avatar = open(cwd + '/data/avatar.png')
-        #user, meta = self.api.update_avatar('me', files={'avatar': avatar})
+        with open(cwd + '/data/avatar.png') as avatar:
+            user, meta = self.api.update_avatar('me', files={'avatar': avatar})
 
-        #cover = open(cwd + '/data/cover.png')
-        #user, meta = self.api.update_cover('me', files={'cover': cover})
+        with open(cwd + '/data/cover.png') as cover:
+            user, meta = self.api.update_cover('me', files={'cover': cover})
 
         user, meta = self.api.follow_user(3)
         user, meta = self.api.unfollow_user(3)
@@ -155,14 +155,51 @@ class AdnpyAPITests(AdnpyTestCase):
         message2, meta = self.api.create_message(27024, data={'text': "awesome 2"})
         message, meta = self.api.get_message(27024, message1)
         messages, meta = self.api.get_messages(ids='%s, %s' % (message1.id, message2.id))
-        self.assertEquals(len(messages), 2)
         messages, meta = self.api.users_messages()
-        self.assertEquals(len(messages), 2)
         messages, meta = self.api.get_channel_messages(27024)
-        self.assertEquals(len(messages), 2)
 
         message, meta = self.api.delete_message(27024, message1)
         message, meta = self.api.delete_message(27024, message2)
+
+    def test_file(self):
+        cwd = os.path.dirname(__file__)
+        ids = []
+        with open(cwd + '/data/avatar.png') as avatar:
+            file_, meta = self.api.create_file(files={'content': avatar}, data={'type': 'com.adnpy.testing'})
+
+        ids += [file_.id]
+        file_, meta = self.api.get_file(file_.id)
+
+        # Partial file
+        partial_file, meta = self.api.create_file(data={'type': 'com.adnpy.testing'})
+        ids += [file_.id]
+        self.api.update_file(file_.id, data={
+            'annotations': [{
+                'type': 'net.adnpy.testing',
+                'value': {
+                    'test': 'test'
+                }
+            }]
+        })
+
+        self.api.create_custom_derived_file(partial_file.id, 'custom', data={'type': 'com.adnpy.testing'})
+
+        with open(cwd + '/data/cover.png') as cover:
+            self.api.set_custom_derived_file_content(partial_file.id, 'custom', data=cover, headers={'Content-Type': 'image/png'})
+
+        with open(cwd + '/data/avatar.png') as avatar:
+            resp = self.api.set_file_content(partial_file.id, data=avatar, headers={'Content-Type': 'image/png'})
+
+        file_, meta = self.api.get_file(partial_file.id)
+
+        files, meta = self.api.get_files(ids=','.join(ids))
+
+        self.assertEquals(len(files), 2)
+        files, meta = self.api.get_my_files()
+        self.assertGreaterEqual(len(files), 2)
+
+        self.api.get_file_content(partial_file.id)
+        self.api.get_custom_derived_file_content(partial_file.id, 'custom')
 
     def test_interactions(self):
 

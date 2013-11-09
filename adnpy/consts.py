@@ -87,6 +87,16 @@ MESSAGE_PARAMS = [
 ]
 
 
+FILE_PARAMS = [
+    'file_types',
+    'include_incomplete',
+    'include_private',
+    'include_annotations',
+    'include_file_annotations',
+    'include_user_annotations',
+]
+
+
 PLACE_SEARCH_PARAMS = [
     'latitude',
     'longitude',

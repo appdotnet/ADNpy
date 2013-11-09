@@ -2,11 +2,11 @@ import re
 import requests
 
 from adnpy.consts import (PAGINATION_PARAMS, POST_PARAMS, USER_PARAMS, USER_SEARCH_PARAMS, POST_SEARCH_PARAMS,
-                          CHANNEL_PARAMS, MESSAGE_PARAMS, PLACE_SEARCH_PARAMS)
+                          CHANNEL_PARAMS, MESSAGE_PARAMS, PLACE_SEARCH_PARAMS, FILE_PARAMS)
 from adnpy.errors import (AdnAuthAPIException, AdnPermissionDenied, AdnMissing, AdnRateLimitAPIException,
                           AdnInsufficientStorageException, AdnAPIException)
 from adnpy.models import (SimpleValueModel, APIModel, Post, User, Channel, Message, Interaction,
-                         Token, Place, ExploreStream)
+                         Token, Place, ExploreStream, File)
 from adnpy.utils import json_encoder
 
 class API(requests.Session):
@@ -29,7 +29,7 @@ class API(requests.Session):
 
     """
     @classmethod
-    def build_api(cls, api_root='https://alpha-api.app.net/stream/0', access_token=None, verify_ssl=False, extra_headers=None):
+    def build_api(cls, api_root='https://alpha-api.app.net/stream/0', access_token=None, verify_ssl=True, extra_headers=None):
         api = cls()
         api.api_root = api_root
         if access_token:
@@ -40,7 +40,7 @@ class API(requests.Session):
 
         return api
 
-    def request(self, method, url, *args, **kwargs):
+    def request(self, method, url, raw_response=False, *args, **kwargs):
         if url:
             url =  self.api_root + url
 
@@ -52,6 +52,11 @@ class API(requests.Session):
         kwargs['headers'] = headers
 
         response = super(API, self).request(method, url, *args, **kwargs)
+        response.raise_for_status()
+
+
+        if response.status_code == 204 or raw_response:
+            return response
 
         response = APIModel.from_string(response.content, self)
 
@@ -92,7 +97,8 @@ class API(requests.Session):
 re_path_template = re.compile('{\w+}')
 
 
-def bind_api_method(func_name, path, payload_type=None, payload_list=False, allowed_params=None, method='GET', require_auth=True, content_type='JSON', extra_doc='', link='#'):
+def bind_api_method(func_name, path, payload_type=None, payload_list=False, allowed_params=None,
+                    method='GET', require_auth=True, raw_response=False, content_type='JSON', extra_doc='', link='#'):
     allowed_params = allowed_params or []
 
     def run(self, *args, **kwargs):
@@ -119,11 +125,20 @@ def bind_api_method(func_name, path, payload_type=None, payload_list=False, allo
 
             value = unicode(getattr(value, 'id', value))
             proccessed_path = proccessed_path.replace(variable, value)
+
         resp_method = self.request
         if method in ('POST', 'PUT', 'PATCH') and content_type == 'JSON' and kwargs.get('data'):
             resp_method = self.request_json
 
-        resp = resp_method(method, proccessed_path, params=parameters, **kwargs)
+        resp = resp_method(method, proccessed_path, params=parameters, raw_response=raw_response, **kwargs)
+
+        if raw_response:
+            return resp
+
+        # If the status code is 204 there won't be any JSON to parse
+        if getattr(resp, 'status_code', None) == 204:
+            return None
+
         if payload_list:
             resp.data = [payload_type.from_response_data(x, api=self) for x in resp.data]
         else:
@@ -456,6 +471,65 @@ bind_api_method('delete_message', '/channels/{channel_id}/messages/{message_id}'
                  allowed_params=PAGINATION_PARAMS + MESSAGE_PARAMS + ['ids'],
                  require_auth=True)
 
+# Files
+
+bind_api_method('create_file', '/files', payload_type=File, method='POST',
+                 allowed_params=FILE_PARAMS,
+                 require_auth=True,
+                 content_type='multipart/form-data',)
+
+
+bind_api_method('update_file', '/files/{file_id}', payload_type=File, method='PUT',
+                 allowed_params=FILE_PARAMS,
+                 require_auth=True)
+
+
+bind_api_method('set_file_content', '/files/{file_id}/content', payload_type=File, method='PUT',
+                 allowed_params=FILE_PARAMS,
+                 require_auth=True,
+                 content_type='multipart/form-data',)
+
+
+bind_api_method('get_file_content', '/files/{file_id}/content', payload_type=File, method='GET',
+                 allowed_params=FILE_PARAMS, raw_response=True,
+                 require_auth=True)
+
+
+bind_api_method('create_custom_derived_file', '/files/{file_id}/{derived_key}', payload_type=File, method='POST',
+                 allowed_params=FILE_PARAMS,
+                 require_auth=True,
+                 content_type='multipart/form-data',)
+
+
+bind_api_method('set_custom_derived_file_content', '/files/{file_id}/content/{derived_key}', payload_type=File, method='PUT',
+                 allowed_params=FILE_PARAMS,
+                 require_auth=True,
+                 content_type='multipart/form-data',)
+
+
+bind_api_method('get_custom_derived_file_content', '/files/{file_id}/content/{derived_key}', payload_type=File, method='GET',
+                 allowed_params=FILE_PARAMS,  raw_response=True,
+                 require_auth=True)
+
+
+bind_api_method('get_file', '/files/{file_id}', payload_type=File, method='GET',
+                 allowed_params=FILE_PARAMS,
+                 require_auth=True)
+
+
+bind_api_method('get_files', '/files', payload_type=File, method='GET', payload_list=True,
+                 allowed_params=FILE_PARAMS + ['ids'],
+                 require_auth=True)
+
+
+bind_api_method('delete_file', '/files/{file_id}', payload_type=File, method='DELETE',
+                 allowed_params=FILE_PARAMS,
+                 require_auth=True)
+
+
+bind_api_method('get_my_files', '/users/me/files', payload_type=File, method='GET', payload_list=True,
+                 allowed_params=FILE_PARAMS + PAGINATION_PARAMS,
+                 require_auth=True)
 
 # Interactions
 bind_api_method('interactions_with_user', '/users/me/interactions', payload_type=Interaction, payload_list=True,

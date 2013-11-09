@@ -322,6 +322,19 @@ class App(APIModel):
         return app
 
 
+class File(APIModel):
+    """
+    The File Model
+    """
+    @classmethod
+    def from_response_data(cls, data, api=None):
+        file_ = super(File, cls).from_response_data(data, api)
+        if file_.get('user'):
+            file_.user = User.from_response_data(file_.user)
+
+        return file_
+
+
 class Token(APIModel):
     """
     The Token Model

@@ -7,7 +7,7 @@ from adnpy.api import API
 
 username = os.environ.get('ADN_USERNAME', 'adnpy')
 access_token = os.environ.get('ADN_TEST_ACCESS_TOKEN')
-use_replay = os.environ.get('USE_REPLAY', True)
+use_replay = os.environ.get('USE_REPLAY', 'True') == 'True'
 
 class AdnpyTestCase(TestCase):
 
