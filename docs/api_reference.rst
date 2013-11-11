@@ -6,10 +6,11 @@ API Reference
 
 This page contains some basic documentation for the ADNPy API
 
+.. module:: adnpy.api
 
 :mod:`adnpy.api` --- App.net API
-=======================================
-.. autoclass:: adnpy.api.API
+================================
+.. autoclass:: API
 
 User Methods
 ============
@@ -105,6 +106,25 @@ A Message is very similar to a Post but 1) it doesn’t have to be public and 2)
 .. automethod:: adnpy.api.API.get_messages
 .. automethod:: adnpy.api.API.users_messages
 .. automethod:: adnpy.api.API.delete_message
+
+
+File Methods
+===============
+
+A file is uploaded by a User and hosted by App.net.
+`See File Developer Docs <http://developers.app.net/docs/resources/file/>`_.
+
+.. automethod:: adnpy.api.API.create_file
+.. automethod:: adnpy.api.API.update_file
+.. automethod:: adnpy.api.API.set_file_content
+.. automethod:: adnpy.api.API.get_file_content
+.. automethod:: adnpy.api.API.create_custom_derived_file
+.. automethod:: adnpy.api.API.set_custom_derived_file_content
+.. automethod:: adnpy.api.API.get_custom_derived_file_content
+.. automethod:: adnpy.api.API.get_file
+.. automethod:: adnpy.api.API.get_files
+.. automethod:: adnpy.api.API.delete_file
+.. automethod:: adnpy.api.API.get_my_files
 
 
 Interaction Methods

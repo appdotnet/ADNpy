@@ -7,3 +7,4 @@ adnpy.egg-info/
 .env/
 .coverage
 htmlcov/
+.DS_Store

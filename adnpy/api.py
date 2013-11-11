@@ -150,11 +150,27 @@ def bind_api_method(func_name, path, payload_type=None, payload_list=False, allo
     if payload_list:
         return_type = 'list of %s' % (return_type)
 
+    params_string = ''
+    params = re_path_template.findall(path)
+    params = [x.replace('{', '').replace('}', '') for x in params]
+    if params:
+        params_string += '\n'
+        for param in params:
+            params_string += ':param %s:' % (param)
+
+    arguments = ['*args', '**kwargs']
+    if params:
+        arguments = params + arguments
+
+    arguments = ', '.join(arguments)
+    method_sig = '%s(%s)' % (func_name, arguments)
     doc = """%s
+    %s
     **API Endpoint**: `%s %s`
 
     **Returns**: %s
-    """ % (extra_doc, method, path, return_type)
+    %s
+    """ % (method_sig, extra_doc, method, path, return_type, params_string)
 
     run.__doc__ = doc
 
