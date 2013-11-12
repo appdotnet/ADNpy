@@ -1,3 +1,3 @@
 #! /usr/bin/env bash
 
-nosetests -v --with-coverage tests.test_api tests.test_models
+nosetests -v tests.test_api tests.test_models

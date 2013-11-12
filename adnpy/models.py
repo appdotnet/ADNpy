@@ -2,9 +2,6 @@
 .. module:: models
    :synopsis: Simple abstractions of App.net entities.
 
-.. moduleauthor:: Alex Kessinger <alex@app.net>
-
-
 """
 import collections
 from dateutil.parser import parse

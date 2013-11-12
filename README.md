@@ -1,6 +1,6 @@
-# ADNPy: App.net API for Python
+# ADNpy: App.net API for Python
 
-ADNPy aims to be a easy to use library for interacting with the [App.net API](https://developers.app.net).
+ADNpy aims to be a easy to use library for interacting with the [App.net API](https://developers.app.net).
 
 **Note**: Installation from pip not ready yet
 
@@ -37,7 +37,3 @@ for post in posts:
 for post in adnpy.cursor(adnpy.api.get_explore_stream, 'checkins'):
     print post
 ```
-
-This library is highly inspired by [Tweepy](https://github.com/tweepy/tweepy), while not being a 1 to 1 translation of everything.
-
-
