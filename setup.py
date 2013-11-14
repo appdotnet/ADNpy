@@ -5,6 +5,7 @@ from setuptools import setup, find_packages
 setup(name="adnpy",
       version='0.1.0',
       description="App.net API library for python",
+      long_description=open('README.rst').read(),
       license="MIT",
       author="Alex Kessinger, App.net",
       author_email="alex@app.net",
