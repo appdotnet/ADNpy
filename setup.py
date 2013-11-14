@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(name="adnpy",
-      version='0.0.1',
+      version='0.1.0',
       description="App.net API library for python",
       license="MIT",
       author="Alex Kessinger, App.net",
