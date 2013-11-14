@@ -1,5 +1,7 @@
 # ADNpy: App.net API for Python
 
+[![Build Status](https://travis-ci.org/appdotnet/ADNpy.png?branch=master)](https://travis-ci.org/appdotnet/ADNpy)
+
 ADNpy aims to be a easy to use library for interacting with the [App.net API](https://developers.app.net).
 
 [http://adnpy.readthedocs.org/](http://adnpy.readthedocs.org/)

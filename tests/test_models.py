@@ -15,7 +15,7 @@ class AdnpyModelTests(AdnpyTestCase):
         post.star()
         post.unstar()
         post.delete()
-        post, meta = self.api.get_post(1)
+        post, meta = self.api.get_post(14265380)
         post.repost()
         post.unrepost()
 
