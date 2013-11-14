@@ -6,5 +6,6 @@ install:
 - pip install -r test_requirements.txt
 script: ./run_tests.sh
 env:
-  - secure: "hF2LfcdAFMJCkQCXlPydgMw3CgmMjim7emKMsNzItd66vrQvYwsPRie0JrOGSa/2f/RhmfAAPxTDFKWsiY6/2B3g5j9U80Oz55bfmZYaRWY+6KhBLflb5SSa5guyuUCYWeYtYtqzDo+npw3iyZVrMHxb+v+S3Gud8tbon+nNqeU=" 
-  - secure: "TVdj2HQnFea8DhV+4ldOHCdYEU4OhH/wWCmOUKGR9CTO3WBSrk6G75xXw65YrXU4ME0hCf9Q4gdBbF3ovgRvqb4jLJs+OiXs/lNH5D+ToeMJNpy/Hh48JFsxoCaQQSKT3aRl5o1f8MpJ/E6DM3uxqBKdMylYwj/ZRSRWb2toXjg="
+  global:
+    - secure: "hF2LfcdAFMJCkQCXlPydgMw3CgmMjim7emKMsNzItd66vrQvYwsPRie0JrOGSa/2f/RhmfAAPxTDFKWsiY6/2B3g5j9U80Oz55bfmZYaRWY+6KhBLflb5SSa5guyuUCYWeYtYtqzDo+npw3iyZVrMHxb+v+S3Gud8tbon+nNqeU=" 
+    - secure: "TVdj2HQnFea8DhV+4ldOHCdYEU4OhH/wWCmOUKGR9CTO3WBSrk6G75xXw65YrXU4ME0hCf9Q4gdBbF3ovgRvqb4jLJs+OiXs/lNH5D+ToeMJNpy/Hh48JFsxoCaQQSKT3aRl5o1f8MpJ/E6DM3uxqBKdMylYwj/ZRSRWb2toXjg="
