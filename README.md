@@ -2,7 +2,7 @@
 
 ADNpy aims to be a easy to use library for interacting with the [App.net API](https://developers.app.net).
 
-**Note**: Installation from pip not ready yet
+[http://adnpy.readthedocs.org/](http://adnpy.readthedocs.org/)
 
 ## Installation
 

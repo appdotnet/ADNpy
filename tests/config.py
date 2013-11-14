@@ -7,7 +7,14 @@ from adnpy.api import API
 
 username = os.environ.get('ADN_USERNAME', 'adnpy')
 access_token = os.environ.get('ADN_TEST_ACCESS_TOKEN')
-use_replay = os.environ.get('USE_REPLAY', 'True') == 'True'
+
+# This is for travis
+access_token_part_a = os.environ.get('ADN_TEST_ACCESS_TOKEN_A')
+access_token_part_b = os.environ.get('ADN_TEST_ACCESS_TOKEN_B')
+if access_token_part_a and access_token_part_b:
+    access_token = access_token_part_a + access_token_part_b
+
+use_replay = os.environ.get('USE_REPLAY', 'False') == 'True'
 
 class AdnpyTestCase(TestCase):
 

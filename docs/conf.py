@@ -43,7 +43,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ADNPy'
-copyright = u'2013, Alex Kessinger'
+copyright = u'2013, App.net'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
