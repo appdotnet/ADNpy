@@ -188,3 +188,33 @@ The Configuration object contains variables which define the current behavior of
 
 .. automethod:: adnpy.api.API.get_config
 
+
+App Stream Methods
+==================
+
+A customized view of the global events happening on App.net that is streamed to the client instead of polling.
+`See App Stream Developer Docs <http://developers.app.net/docs/resources/app-stream/>`_.
+
+
+.. automethod:: adnpy.api.API.create_stream
+.. automethod:: adnpy.api.API.get_stream
+.. automethod:: adnpy.api.API.update_stream
+.. automethod:: adnpy.api.API.delete_stream
+.. automethod:: adnpy.api.API.delete_all_streams
+.. automethod:: adnpy.api.API.get_streams
+
+
+Filter Methods
+==============
+
+A Filter restricts a stream of messages on the server side so your client only sees what it’s interested in. Streams are currently the only way to use filters right now.
+`See Filter Developer Docs <http://developers.app.net/docs/resources/filter/>`_.
+
+
+.. automethod:: adnpy.api.API.create_filter
+.. automethod:: adnpy.api.API.get_filter
+.. automethod:: adnpy.api.API.update_filter
+.. automethod:: adnpy.api.API.delete_filter
+.. automethod:: adnpy.api.API.delete_all_filters
+.. automethod:: adnpy.api.API.get_filters
+

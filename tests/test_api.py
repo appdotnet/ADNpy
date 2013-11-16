@@ -3,6 +3,8 @@ import time
 import unittest
 
 from adnpy.cursor import cursor
+from adnpy.utils import get_app_access_token
+
 from config import AdnpyTestCase
 
 test_post_id = 1
@@ -226,6 +228,76 @@ class AdnpyAPITests(AdnpyTestCase):
     def test_explore_stream(self):
         explore_streams, meta = self.api.get_explore_streams()
         posts, meta = self.api.get_explore_stream(explore_streams[0])
+
+    def test_stream_filters(self):
+        # Reset
+        stream_filters, meta = self.api.delete_all_filters()
+
+        filter_def = {
+            "clauses": [
+                {
+                    "field": "/data/entities/hashtags/*/name",
+                    "object_type": "post",
+                    "operator": "matches",
+                    "value": "rollout"
+                }
+            ],
+            "id": "1",
+            "match_policy": "include_any",
+            "name": "Posts about rollouts"
+        }
+
+        stream_filter, meta = self.api.create_filter(data=filter_def)
+        stream_filter, meta = self.api.get_filter(stream_filter)
+        filter_def['clauses'] += [{
+            "field": "/data/entities/hashtags/*/name",
+            "object_type": "post",
+            "operator": "matches",
+            "value": "bug"
+        }]
+
+        stream_filter, meta = self.api.update_filter(stream_filter, data=filter_def)
+        self.assertEquals(len(stream_filter.clauses), 2)
+        stream_filter, meta = self.api.delete_filter(stream_filter)
+        stream_filter, meta = self.api.create_filter(data=filter_def)
+        filter_def['id'] = '2'
+        stream_filter, meta = self.api.create_filter(data=filter_def)
+        stream_filters, meta = self.api.get_filters()
+        self.assertEquals(len(stream_filters), 2)
+        stream_filters, meta = self.api.delete_all_filters()
+        stream_filters, meta = self.api.get_filters()
+        self.assertEquals(len(stream_filters), 0)
+
+    def test_app_stream(self):
+        app_access_token, token = get_app_access_token(self.client_id, self.client_secret)
+        self.api.add_authorization_token(app_access_token)
+        # Reset
+        self.api.delete_all_streams()
+
+        stream_def = {
+            "object_types": [
+                "post"
+            ],
+            "type": "long_poll",
+            "key": "rollout_stream"
+        }
+
+        app_stream, meta = self.api.create_stream(data=stream_def)
+        app_stream, meta = self.api.get_stream(app_stream)
+
+        stream_def['object_types'] += ["star"]
+
+        app_stream, meta = self.api.update_stream(app_stream, data=stream_def)
+        self.assertEquals(len(app_stream.object_types), 2)
+        app_stream, meta = self.api.delete_stream(app_stream)
+        app_stream, meta = self.api.create_stream(data=stream_def)
+        stream_def['key'] = "rollout_stream_2"
+        app_stream, meta = self.api.create_stream(data=stream_def)
+        app_streams, meta = self.api.get_streams()
+        self.assertEquals(len(app_streams), 2)
+        app_streams, meta = self.api.delete_all_streams()
+        app_streams, meta = self.api.get_streams()
+        self.assertEquals(len(app_streams), 0)
 
     def test_cursor(self):
         iterator = cursor(self.api.posts_stream_global, count=1)

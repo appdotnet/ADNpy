@@ -373,3 +373,36 @@ class ExploreStream(APIModel):
     @property
     def id(self):
         return self.slug
+
+
+class AppStream(APIModel):
+    """
+    The App Stream Model
+    """
+    @classmethod
+    def from_response_data(cls, data, api=None):
+        app_stream = super(AppStream, cls).from_response_data(data, api)
+
+        return app_stream
+
+
+class StreamFilter(APIModel):
+    """
+    The Stream Filter Model
+    """
+    @classmethod
+    def from_response_data(cls, data, api=None):
+        stream_filter = super(StreamFilter, cls).from_response_data(data, api)
+
+        return stream_filter
+
+
+class StreamingMeta(APIModel):
+    """
+    The Streaming Meta Model
+    """
+    @classmethod
+    def from_response_data(cls, data, api=None):
+        streaming_meta = super(StreamingMeta, cls).from_response_data(data, api)
+        streaming_meta.is_deleted = streaming_meta.get('is_deleted', False)
+        return streaming_meta

@@ -108,3 +108,7 @@ PLACE_SEARCH_PARAMS = [
     'horizontal_accuracy',
     'vertical_accuracy',
 ]
+
+APP_STREAM_PARAMS = [
+    'key',
+]

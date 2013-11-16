@@ -2,11 +2,11 @@ import re
 import requests
 
 from adnpy.consts import (PAGINATION_PARAMS, POST_PARAMS, USER_PARAMS, USER_SEARCH_PARAMS, POST_SEARCH_PARAMS,
-                          CHANNEL_PARAMS, MESSAGE_PARAMS, PLACE_SEARCH_PARAMS, FILE_PARAMS)
+                          CHANNEL_PARAMS, MESSAGE_PARAMS, PLACE_SEARCH_PARAMS, FILE_PARAMS, APP_STREAM_PARAMS)
 from adnpy.errors import (AdnAuthAPIException, AdnPermissionDenied, AdnMissing, AdnRateLimitAPIException,
-                          AdnInsufficientStorageException, AdnAPIException)
+                          AdnInsufficientStorageException, AdnAPIException, AdnError)
 from adnpy.models import (SimpleValueModel, APIModel, Post, User, Channel, Message, Interaction,
-                         Token, Place, ExploreStream, File)
+                         Token, Place, ExploreStream, File, AppStream, StreamFilter)
 from adnpy.utils import json_encoder
 
 class API(requests.Session):
@@ -52,8 +52,12 @@ class API(requests.Session):
         kwargs['headers'] = headers
 
         response = super(API, self).request(method, url, *args, **kwargs)
-        response.raise_for_status()
-
+        try:
+            response.raise_for_status()
+        except requests.HTTPError:
+            pass
+        except Exception:
+            raise AdnError()
 
         if response.status_code == 204 or raw_response:
             return response
@@ -586,4 +590,56 @@ bind_api_method('get_explore_streams', '/posts/stream/explore', payload_type=Exp
 bind_api_method('get_explore_stream', '/posts/stream/explore/{slug}', payload_type=Post, payload_list=True,
                 allowed_params=PAGINATION_PARAMS + POST_PARAMS,
                 require_auth=False)
+
+
+# App Stream
+bind_api_method('create_stream', '/streams', payload_type=AppStream, method='POST',
+                require_auth=True)
+
+
+bind_api_method('get_stream', '/streams/{stream_id}', payload_type=AppStream,
+                require_auth=True)
+
+
+bind_api_method('update_stream', '/streams/{stream_id}', payload_type=AppStream, method='PUT',
+                require_auth=True)
+
+
+bind_api_method('delete_stream', '/streams/{stream_id}', payload_type=AppStream, method='DELETE',
+                require_auth=True)
+
+
+bind_api_method('delete_all_streams', '/streams', payload_type=AppStream, method='DELETE', payload_list=True,
+                require_auth=True)
+
+
+bind_api_method('get_streams', '/streams', payload_type=AppStream, payload_list=True,
+                allowed_params=APP_STREAM_PARAMS,
+                require_auth=True)
+
+
+# Stream Filter
+bind_api_method('create_filter', '/filters', payload_type=StreamFilter, method='POST',
+                require_auth=True)
+
+
+bind_api_method('get_filter', '/filters/{filter_id}', payload_type=StreamFilter,
+                require_auth=True)
+
+
+bind_api_method('update_filter', '/filters/{filter_id}', payload_type=StreamFilter, method='PUT',
+                require_auth=True)
+
+
+bind_api_method('delete_filter', '/filters/{filter_id}', payload_type=StreamFilter, method='DELETE',
+                require_auth=True)
+
+
+bind_api_method('delete_all_filters', '/filters', payload_type=StreamFilter, method='DELETE', payload_list=True,
+                require_auth=True)
+
+
+bind_api_method('get_filters', '/filters', payload_type=StreamFilter, payload_list=True,
+                allowed_params=APP_STREAM_PARAMS,
+                require_auth=True)
 

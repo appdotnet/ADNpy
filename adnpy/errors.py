@@ -1,34 +1,34 @@
 
 class AdnError(Exception):
+    pass
+
+
+class AdnAPIException(AdnError):
     def __init__(self, api_response):
-        super(AdnError, self).__init__(api_response.meta.error_message)
+        super(AdnAPIException, self).__init__(api_response.meta.error_message)
         self.response = api_response
         self.error_id = api_response.meta.get('error_id')
         self.error_slug = api_response.meta.get('error_slug')
 
     def __str__(self):
-        return "%s error_id: %s error_slug: %s" % (super(AdnError, self).__str__(), self.error_id, self.error_slug)
+        return "%s error_id: %s error_slug: %s" % (super(AdnAPIException, self).__str__(), self.error_id, self.error_slug)
 
 
-class AdnAPIException(AdnError):
+class AdnAuthAPIException(AdnAPIException):
     pass
 
 
-class AdnAuthAPIException(AdnError):
+class AdnRateLimitAPIException(AdnAPIException):
     pass
 
 
-class AdnRateLimitAPIException(AdnError):
+class AdnInsufficientStorageException(AdnAPIException):
     pass
 
 
-class AdnInsufficientStorageException(AdnError):
+class AdnPermissionDenied(AdnAPIException):
     pass
 
 
-class AdnPermissionDenied(AdnError):
-    pass
-
-
-class AdnMissing(AdnError):
+class AdnMissing(AdnAPIException):
     pass

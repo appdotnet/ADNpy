@@ -53,3 +53,4 @@ Reference
    getting_started.rst
    model_reference.rst
    api_reference.rst
+   streaming.rst

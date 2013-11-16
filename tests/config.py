@@ -7,6 +7,8 @@ from adnpy.api import API
 
 username = os.environ.get('ADN_USERNAME', 'adnpy')
 access_token = os.environ.get('ADN_TEST_ACCESS_TOKEN')
+client_id = os.environ.get('ADN_TEST_APP_CLIENT_ID')
+client_secret = os.environ.get('ADN_TEST_CLIENT_SECRET')
 
 # This is for travis
 access_token_part_a = os.environ.get('ADN_TEST_ACCESS_TOKEN_A')
@@ -24,8 +26,10 @@ class AdnpyTestCase(TestCase):
         if access_token:
             self.api.add_authorization_token(access_token)
 
-        if use_replay:
+        self.client_id = client_id
+        self.client_secret = client_secret
 
+        if use_replay:
             start_replay('tests/data/record.json', headers_key=filter_headers_key(['Authorization']))
 
     def tearDown(self):
