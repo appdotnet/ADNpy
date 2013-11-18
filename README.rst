@@ -35,7 +35,7 @@ You are going to need an access token. If you do not already have one first `cre
     adnpy.api.add_authorization_token(<Access Token Here>)
 
     # Create a post
-    post, meta = adnpy.api.create_post(text='Hello, App.net from adnpy.')
+    post, meta = adnpy.api.create_post(data={'text':'Hello, App.net from adnpy.'})
 
     # Take a look at recent checkins
     posts, meta = adnpy.api.get_explore_stream('checkins')
