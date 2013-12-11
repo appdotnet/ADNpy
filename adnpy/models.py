@@ -327,7 +327,7 @@ class File(APIModel):
     def from_response_data(cls, data, api=None):
         file_ = super(File, cls).from_response_data(data, api)
         if file_.get('user'):
-            file_.user = User.from_response_data(file_.user)
+            file_.user = User.from_response_data(file_.user, api)
 
         return file_
 
@@ -340,7 +340,7 @@ class Token(APIModel):
     def from_response_data(cls, data, api=None):
         token = super(Token, cls).from_response_data(data, api)
         if token.get('user'):
-            token.user = User.from_response_data(token.user)
+            token.user = User.from_response_data(token.user, api)
 
         return token
 
