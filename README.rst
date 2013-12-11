@@ -8,7 +8,7 @@ ADNpy: App.net API for Python
     :target: https://travis-ci.org/appdotnet/ADNpy
 
 
-ADNpy aims to be an easy to use python library for interacting with the `App.net API <https://developers.app.net>`_.
+ADNpy aims to be an easy-to-use Python library for interacting with the `App.net API <https://developers.app.net>`_.
 
 Installation
 ------------
@@ -27,7 +27,7 @@ Documentation is available at http://adnpy.readthedocs.org/.
 Quick Start
 -----------
 
-You are going to need an access token. If you do not already have one first `create an app`_, then generate an access token for your app.
+In order to use ADNpy, You'll to need an access token. If you don't already have one, first `create an app`_, and then generate an access token for your app.
 
 .. code-block:: python
 
@@ -35,16 +35,16 @@ You are going to need an access token. If you do not already have one first `cre
     adnpy.api.add_authorization_token(<Access Token Here>)
 
     # Create a post
-    post, meta = adnpy.api.create_post(data={'text':'Hello, App.net from adnpy.'})
+    post, meta = adnpy.api.create_post(data={'text':'Hello App.net from adnpy!'})
 
     # Take a look at recent checkins
     posts, meta = adnpy.api.get_explore_stream('checkins')
     for post in posts:
       print post
 
-    # You can even paginate through checkins using the cursor
-    # Using the cursor will obey rate limits, and theoretically
-    # allow you to page through the entire stream.
+    # You can even paginate through checkins using the cursor method.
+    # Cursors will obey rate limits (by blocking until retries are
+    # permitted), and will allow you to page through the entire stream.
     for post in adnpy.cursor(adnpy.api.get_explore_stream, 'checkins'):
         print post
 
