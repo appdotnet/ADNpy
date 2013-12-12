@@ -51,6 +51,7 @@ Reference
    :maxdepth: 2
 
    getting_started.rst
+   recipes.rst
    model_reference.rst
    api_reference.rst
    streaming.rst
