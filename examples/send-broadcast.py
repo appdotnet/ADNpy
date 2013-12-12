@@ -4,7 +4,7 @@ import adnpy
 # Get an access token from the App.net website and paste it here.
 adnpy.api.add_authorization_token('your access token here')
 
-builder = adnpy.recipes.BroadcastMessageBuilder()
+builder = adnpy.recipes.BroadcastMessageBuilder(adnpy.api)
 
 builder.channel_id = 24204  # Get this channel ID from the web publisher tools
 builder.headline = 'Hello world!'

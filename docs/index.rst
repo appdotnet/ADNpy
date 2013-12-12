@@ -31,7 +31,7 @@ started, you'll need an access token, which you can get by `creating an app
     adnpy.api.add_authorization_token('your access token here')
 
     # Send a broadcast with the BroadcastMessageBuilder recipe.
-    builder = adnpy.recipes.BroadcastMessageBuilder(api)
+    builder = adnpy.recipes.BroadcastMessageBuilder(adnpy.api)
     builder.channel_id = 24204  # Get this channel ID from the web publisher tools
     builder.headline = 'Hello World!'
     builder.text = 'Sending this from [ADNPy](https://github.com/appdotnet/ADNPy) was easy!'

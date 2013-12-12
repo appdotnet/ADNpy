@@ -5,8 +5,8 @@ from __future__ import absolute_import
 .. moduleauthor:: Alex Kessinger <alex@app.net>
 
 """
-__version__ = '0.1'
-__author__ = 'Alex Kessinger'
+__version__ = '0.3.0'
+__author__ = 'Alex Kessinger, Bryan Berg, App.net'
 __license__ = 'MIT'
 
 from .models import User, Post, Message, Interaction, Channel, App, Token, Place
