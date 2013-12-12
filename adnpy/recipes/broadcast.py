@@ -75,6 +75,14 @@ class BroadcastMessageBuilder(object):
 
     def __init__(self, api=None):
         self.api = api or default_api
+        self.channel_id = None
+        self.headline = None
+        self.text = None
+        self.parse_markdown_links = False
+        self.parse_links = False
+        self.read_more_link = None
+        self.photo = None
+        self.attachment = None
 
     def send(self):
         """Sends the broadcast message.

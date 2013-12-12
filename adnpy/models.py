@@ -32,7 +32,11 @@ class SimpleValueModel(object):
 class SimpleValueDictListMode(object):
     @classmethod
     def from_response_data(cls, data, api):
-        return {key: [int(x) for x in val] for key, val in data}
+        resp = dict()
+        for key, val in data.iteritems():
+            resp[key] = [int(x) for x in val]
+
+        return resp
 
 
 class APIModel(dict):
