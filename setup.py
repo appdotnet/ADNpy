@@ -12,8 +12,8 @@ setup(name="adnpy",
       url="http://github.com/appdotnet/adnpy",
       packages=find_packages(exclude=['tests']),
       install_requires=[
-        'python-dateutil==1.5',
-        'requests==2.0.1',
+          'python-dateutil==1.5',
+          'requests==2.0.1',
       ],
       keywords="app.net api library",
       zip_safe=True)

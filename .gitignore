@@ -8,3 +8,4 @@ adnpy.egg-info/
 .coverage
 htmlcov/
 .DS_Store
+.ropeproject/

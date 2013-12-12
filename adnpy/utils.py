@@ -3,6 +3,7 @@ import requests
 
 from adnpy.models import APIModel
 
+
 def json_handler(obj):
     if hasattr(obj, 'isoformat'):
         return obj.isoformat()
@@ -10,6 +11,7 @@ def json_handler(obj):
         return obj.serialize()
 
     return obj
+
 
 def json_encoder(data):
     if isinstance(data, APIModel):
@@ -27,5 +29,6 @@ def get_app_access_token(client_id, client_secret, host='account.app.net', verif
 
     resp = requests.post('https://%s/oauth/access_token' % host, data=data)
     resp.raise_for_status()
+    response_body = resp.json()
 
-    return resp.json().get('access_token'), resp.json().get('token')
+    return response_body.get('access_token'), response_body.get('token')

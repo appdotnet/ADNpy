@@ -32,7 +32,7 @@ class SimpleValueModel(object):
 class SimpleValueDictListMode(object):
     @classmethod
     def from_response_data(cls, data, api):
-        return {key:[int(x) for x in val] for key, val in data}
+        return {key: [int(x) for x in val] for key, val in data}
 
 
 class APIModel(dict):
@@ -73,7 +73,6 @@ class APIModel(dict):
             else:
                 self[k] = v
 
-
         annotations = self.get('annotations')
         if annotations:
             self.annotations_by_key = collections.defaultdict(list)
@@ -89,7 +88,6 @@ class APIModel(dict):
         """
         return cls(json.loads(raw_json), api)
 
-
     @classmethod
     def from_response_data(cls, data, api=None):
         """
@@ -100,7 +98,6 @@ class APIModel(dict):
         model = cls(data, api)
         return model
 
-
     def serialize(self):
         """
         Converts :class:`adnpy.models.Model` into a normal dict without references to the api
@@ -109,14 +106,14 @@ class APIModel(dict):
         data = {}
         for k, v in self.iteritems():
             if k.startswith('_'):
-              continue
+                continue
 
             if isinstance(v, APIModel):
-              data[k] = v.serialize()
+                data[k] = v.serialize()
             elif v and is_seq_not_string(v) and isinstance(v[0], APIModel):
-              data[k] = [x.serialize() for x in v]
+                data[k] = [x.serialize() for x in v]
             else:
-              data[k] = v
+                data[k] = v
 
         return data
 
@@ -237,7 +234,6 @@ class Post(APIModel):
         """
         return self._api.repost_post(self)
 
-
     def unrepost(self):
         """
         Remove repost of this post
@@ -249,7 +245,6 @@ class Post(APIModel):
         Star this post
         """
         return self._api.star_post(self)
-
 
     def unstar(self):
         """

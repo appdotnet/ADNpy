@@ -18,6 +18,7 @@ if access_token_part_a and access_token_part_b:
 
 use_replay = os.environ.get('USE_REPLAY', 'False') == 'True'
 
+
 class AdnpyTestCase(TestCase):
 
     def setUp(self):

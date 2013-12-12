@@ -1,17 +1,17 @@
+import time
 import json
 import requests
 from threading import Thread
 
-from adnpy.models import (SimpleValueModel, Post, User, Channel, Message,
-                         Token, File, StreamingMeta)
+from adnpy.models import (SimpleValueModel, Post, User, Channel, Message, Token, File, StreamingMeta)
 
 
 class StreamListener(object):
     """
     The StreamListener Object
 
-    for every message type (post, star, user_follow, mute, block, stream_marker, message, channel, channel_subscription, token, file) you
-    can define a on_<message_type> method to handle those messages.
+    for every message type (post, star, user_follow, mute, block, stream_marker, message, channel, channel_subscription,
+    token, file) you can define a on_<message_type> method to handle those messages.
 
     Example::
 
@@ -205,8 +205,9 @@ class Stream(object):
                 if resp.status_code != 200:
                     if self.listener.on_error(resp.status_code) is False:
                         break
+
                     error_counter += 1
-                    sleep(self.retry_time)
+                    time.sleep(self.retry_time)
                 else:
                     error_counter = 0
                     self.listener.on_connect()
@@ -226,13 +227,10 @@ class Stream(object):
             self.running = False
 
     def _read_loop(self, resp):
-
         while self.running:
-
             for line in resp.iter_lines(chunk_size=1):
                 if line:
                     self._data(line)
-
 
     def start(self, async=False):
         self.running = True

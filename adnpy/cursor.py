@@ -26,7 +26,7 @@ def cursor(func, *args, **kwargs):
 
     paginate_on = kwargs.pop('paginate_on', 'min_id')
     paginate_param = kwargs.pop('paginate_param', 'before_id')
-    kwargs['count'] = kwargs.pop('count', 200) 
+    kwargs['count'] = kwargs.pop('count', 200)
     more = True
 
     while more:

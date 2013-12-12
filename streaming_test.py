@@ -18,6 +18,7 @@ stream_def = {
     "key": "post_stream"
 }
 
+
 # Create a stream
 class MyStreamListener(StreamListener):
     def on_post(self, post, meta):
@@ -27,6 +28,5 @@ class MyStreamListener(StreamListener):
         print post.text
 
 my_api = adnpy.API.build_api(access_token=app_access_token)
-stream  = Stream(my_api, stream_def, MyStreamListener)
-
+stream = Stream(my_api, stream_def, MyStreamListener)
 stream.start()

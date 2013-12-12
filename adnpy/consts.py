@@ -5,7 +5,7 @@ PAGINATION_PARAMS = [
 ]
 
 
-POST_PARAMS =  [
+POST_PARAMS = [
     'include_muted',
     'include_deleted',
     'include_directed_posts',

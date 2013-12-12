@@ -6,8 +6,9 @@ from config import AdnpyTestCase
 
 test_post_id = 1
 
-"""Unit tests"""
+
 class AdnpyModelTests(AdnpyTestCase):
+    """Unit tests"""
 
     def test_post(self):
         text = u'Testing posts indvidually'

@@ -9,8 +9,9 @@ from config import AdnpyTestCase
 
 test_post_id = 1
 
-"""Unit tests"""
+
 class AdnpyAPITests(AdnpyTestCase):
+    """Unit tests"""
 
     def test_posts_stream_global(self):
         self.api.posts_stream_global()
@@ -52,7 +53,6 @@ class AdnpyAPITests(AdnpyTestCase):
         # post, meta = self.api.report_post(1)
 
         posts, meta = self.api.post_search(text='awesome')
-
 
     def test_user(self):
         display_name = u'tester %s' % (time.time())
@@ -122,7 +122,6 @@ class AdnpyAPITests(AdnpyTestCase):
         channel_fetched, meta = self.api.get_channel(channel)
         self.assertEquals(channel.id, channel_fetched.id)
 
-
         channels, meta = self.api.get_channels(ids=channel_fetched.id)
 
         channels, meta = self.api.users_channels()
@@ -190,7 +189,7 @@ class AdnpyAPITests(AdnpyTestCase):
             self.api.set_custom_derived_file_content(partial_file.id, 'custom', data=cover, headers={'Content-Type': 'image/png'})
 
         with open(cwd + '/data/avatar.png') as avatar:
-            resp = self.api.set_file_content(partial_file.id, data=avatar, headers={'Content-Type': 'image/png'})
+            self.api.set_file_content(partial_file.id, data=avatar, headers={'Content-Type': 'image/png'})
 
         file_, meta = self.api.get_file(partial_file.id)
 
@@ -204,19 +203,14 @@ class AdnpyAPITests(AdnpyTestCase):
         self.api.get_custom_derived_file_content(partial_file.id, 'custom')
 
     def test_interactions(self):
-
         interactions, meta = self.api.interactions_with_user()
-
 
     def test_text_process(self):
         text, meta = self.api.text_process(data={'text': "#awesome @voidfiles"})
 
-
     def test_places(self):
         places, meta = self.api.search_places(q='krispy kreme', latitude='37.701598', longitude='-122.470093', radius='50000')
-
         place, meta = self.api.get_place(places[0])
-
 
     def test_token(self):
         token, meta = self.api.get_token()
