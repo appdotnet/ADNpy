@@ -137,6 +137,11 @@ class APIModel(dict):
         return self.serialize()
 
 
+class APIMeta(APIModel):
+    """API response metadata."""
+    pass
+
+
 class User(APIModel):
     """
     The User Model

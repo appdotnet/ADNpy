@@ -3,8 +3,6 @@ ADNPy: App.net API for Python
 
 ADNPy aims to be a easy to use library for interacting with the `App.net API <https://developers.app.net>`_.
 
-**Note**: Installation from pip not ready yet
-
 Installation
 --------------
 ::
@@ -20,28 +18,29 @@ Github and install it manually::
 Quick Start
 -----------
 
-You are going to need an access_token, if you don't have a developer account on App.net you can checkout `dev-lite <http://dev-lite.jonathonduerig.com/>`_.
+ADNPy aims to be an easy-to-use Python client for the App.net API. To get
+started, you'll need an access token, which you can get by `creating an app
+<https://account.app.net/developer/apps/>`_ on App.net and clicking the
+"Generate a user token" link.
 
 .. code-block:: python
 
-    python
     import adnpy
 
-    adnpy.api.add_authorization_token(<Access Token Here>)
+    # Set the default access token for API calls.
+    adnpy.api.add_authorization_token('your access token here')
 
-    # Create a post
-    post, meta = adnpy.api.create_post(text='Hello, App.net from adnpy.')
+    # Send a broadcast with the BroadcastMessageBuilder recipe.
+    builder = adnpy.recipes.BroadcastMessageBuilder(api)
+    builder.channel_id = 24204  # Get this channel ID from the web publisher tools
+    builder.headline = 'Hello World!'
+    builder.text = 'Sending this from [ADNPy](https://github.com/appdotnet/ADNPy) was easy!'
+    builder.parse_markdown_links = True
+    builder.read_more_link = 'http://adnpy.readthedocs.org/'
+    builder.send()
 
-    # Take a look at recent checkins
-    posts, meta = adnpy.api.get_explore_stream('checkins')
-    for post in posts:
-      print post
-
-    # You can even paginate through checkins using the cursor
-    # Using the cursor will obey rate limits, and theoretically
-    # allow you to page through the entire stream.
-    for post in adnpy.cursor(adnpy.api.get_explore_stream, 'checkins'):
-        print post
+    # Or create a post using the API module.
+    post, meta = adnpy.api.create_post(text='Hello from ADNPy!')
 
 
 Reference
@@ -51,6 +50,7 @@ Reference
    :maxdepth: 2
 
    getting_started.rst
+   recipes.rst
    model_reference.rst
    api_reference.rst
    streaming.rst

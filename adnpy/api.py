@@ -6,7 +6,7 @@ from adnpy.consts import (PAGINATION_PARAMS, POST_PARAMS, USER_PARAMS, USER_SEAR
 from adnpy.errors import (AdnAuthAPIException, AdnPermissionDenied, AdnMissing, AdnRateLimitAPIException,
                           AdnInsufficientStorageException, AdnAPIException, AdnError)
 from adnpy.models import (SimpleValueModel, APIModel, Post, User, Channel, Message, Interaction, Token, Place, ExploreStream, File,
-                          AppStream, StreamFilter)
+                          AppStream, StreamFilter, APIMeta)
 from adnpy.utils import json_encoder
 
 
@@ -148,6 +148,8 @@ def bind_api_method(func_name, path, payload_type=None, payload_list=False, allo
             resp.data = [payload_type.from_response_data(x, api=self) for x in resp.data]
         else:
             resp.data = payload_type.from_response_data(resp.data, api=self)
+
+        resp.meta = APIMeta.from_response_data(resp.meta, api=self)
 
         return resp.data, resp.meta
 
