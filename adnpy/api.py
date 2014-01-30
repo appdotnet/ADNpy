@@ -167,7 +167,7 @@ def bind_api_method(func_name, path, payload_type=None, payload_list=False, allo
 
     arguments = ['*args', '**kwargs']
     if params:
-        arguments = params + arguments
+        arguments = params + ['%s=None' % x for x in allowed_params] + arguments
 
     arguments = ', '.join(arguments)
     method_sig = '%s(%s)' % (func_name, arguments)
