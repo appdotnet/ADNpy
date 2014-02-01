@@ -179,7 +179,10 @@ class Stream(object):
         self.timeout = options.get("timeout", 600.0)
         self.retry_count = options.get("retry_count", 10)
         self.retry_time = options.get("retry_time", 10.0)
-        self.snooze_time = options.get("snooze_time",  5.0)
+        self.snooze_time = options.get("snooze_time", 5.0)
+
+    def get_streaming_endpoint(self, endpoint):
+        return endpoint
 
     def _run(self):
         app_stream = None
@@ -190,7 +193,8 @@ class Stream(object):
         if not app_stream:
             app_stream, meta = self.api.create_stream(data=self.stream_defenition)
 
-        streaming_endpoint = app_stream.endpoint
+        # For alerting the url
+        streaming_endpoint = self.get_streaming_endpoint(app_stream.endpoint)
 
         # Connect and process the stream
         error_counter = 0
