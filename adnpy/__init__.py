@@ -5,7 +5,7 @@ from __future__ import absolute_import
 .. moduleauthor:: Alex Kessinger <alex@app.net>
 
 """
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 __author__ = 'Alex Kessinger, Bryan Berg, App.net'
 __license__ = 'MIT'
 

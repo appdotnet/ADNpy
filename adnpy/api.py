@@ -30,7 +30,7 @@ class API(requests.Session):
 
     """
     @classmethod
-    def build_api(cls, api_root='https://api.app.net/stream/0', access_token=None, verify_ssl=True, extra_headers=None):
+    def build_api(cls, api_root='https://api.app.net', access_token=None, verify_ssl=True, extra_headers=None):
         api = cls()
         api.api_root = api_root
         if access_token:
