@@ -74,7 +74,7 @@ class StreamListener(object):
 
     def prepare_channel(self, data):
         return (
-            Message.from_response_data(data, self.api),
+            Channel.from_response_data(data, self.api),
         )
 
     def prepare_channel_subscription(self, data):
