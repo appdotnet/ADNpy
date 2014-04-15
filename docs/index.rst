@@ -40,7 +40,7 @@ started, you'll need an access token, which you can get by `creating an app
     builder.send()
 
     # Or create a post using the API module.
-    post, meta = adnpy.api.create_post(text='Hello from ADNPy!')
+    post, meta = adnpy.api.create_post(data={'text': 'Hello World'})
 
 
 Reference
