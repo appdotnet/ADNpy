@@ -85,17 +85,17 @@ class StreamListener(object):
 
     def prepare_token(self, data):
         return (
-            Token.from_response_data(data, self.api)
+            Token.from_response_data(data, self.api),
         )
 
     def prepare_file(self, data):
         return (
-            File.from_response_data(data, self.api)
+            File.from_response_data(data, self.api),
         )
 
     def prepare_fallback(self, data):
         return (
-            SimpleValueModel.from_response_data(data, self.api)
+            SimpleValueModel.from_response_data(data, self.api),
         )
 
     def on_connect(self):
