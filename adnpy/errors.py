@@ -14,6 +14,12 @@ class AdnAPIException(AdnError):
         return "%s error_id: %s error_slug: %s" % (super(AdnAPIException, self).__str__(), self.error_id, self.error_slug)
 
 
+class AdnBadRequestAPIException(AdnAPIException):
+    def __init__(self, response):
+        response.meta.error_message = response.meta.error_message.replace('Bad Request: ', '')
+        super(AdnBadRequestAPIException, self).__init__(response)
+
+
 class AdnAuthAPIException(AdnAPIException):
     pass
 
