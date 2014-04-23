@@ -3,11 +3,11 @@
 from setuptools import setup, find_packages
 
 setup(name="adnpy",
-      version='0.3.6',
+      version='0.3.7',
       description="App.net API library for python",
       long_description=open('README.rst').read(),
       license="MIT",
-      author="Alex Kessinger, Bryan Berg, App.net",
+      author="Alex Kessinger, Bryan Berg, Mark Thurman, App.net",
       author_email="alex@app.net",
       url="http://github.com/appdotnet/adnpy",
       packages=find_packages(exclude=['tests']),
