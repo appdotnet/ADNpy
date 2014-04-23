@@ -4,7 +4,7 @@ import requests
 from adnpy.consts import (PAGINATION_PARAMS, POST_PARAMS, USER_PARAMS, USER_SEARCH_PARAMS, POST_SEARCH_PARAMS,
                           CHANNEL_PARAMS, MESSAGE_PARAMS, PLACE_SEARCH_PARAMS, FILE_PARAMS, APP_STREAM_PARAMS)
 from adnpy.errors import (AdnAuthAPIException, AdnPermissionDenied, AdnMissing, AdnRateLimitAPIException,
-                          AdnInsufficientStorageException, AdnAPIException, AdnError)
+                          AdnInsufficientStorageException, AdnAPIException, AdnError, AdnBadRequestAPIException)
 from adnpy.models import (SimpleValueModel, APIModel, Post, User, Channel, Message, Interaction, Token, Place, ExploreStream, File,
                           AppStream, StreamFilter, APIMeta)
 from adnpy.utils import json_encoder
@@ -64,6 +64,9 @@ class API(requests.Session):
             return response
 
         response = APIModel.from_string(response.content, self)
+
+        if response.meta.code == 400:
+            raise AdnBadRequestAPIException(response)
 
         if response.meta.code == 401:
             raise AdnAuthAPIException(response)
