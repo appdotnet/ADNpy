@@ -79,9 +79,9 @@ class APIModel(dict):
 
         annotations = self.get('annotations')
         if annotations:
-            self.annotations_by_key = collections.defaultdict(list)
+            self._annotations_by_key = collections.defaultdict(list)
             for annotation in annotations:
-                self.annotations_by_key[annotation.type].append(annotation.get('value', {}))
+                self._annotations_by_key[annotation.type].append(annotation.get('value', {}))
 
     @classmethod
     def from_string(cls, raw_json, api=None):
@@ -125,7 +125,7 @@ class APIModel(dict):
         """
         Is a convenience method for accessing annotations on models that have them
         """
-        value = self.get('annotations_by_key', {}).get(key)
+        value = self.get('_annotations_by_key', {}).get(key)
         if not value:
             return value
 
